@@ -35,3 +35,16 @@ build
 # env
 .env
 .env.*
+
+node_modules
+**/node_modules
+
+.env
+.env.*
+**/.env
+**/.env.*
+
+dist
+build
+.vercel
+.DS_Store
