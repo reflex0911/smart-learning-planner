@@ -1,0 +1,70 @@
+/* ===============================
+   🌌 SMART PLANNER PREMIUM THEMES
+   =============================== */
+
+/* animation */
+.animated-bg{
+  background-size: 400% 400%;
+  animation: gradientMove 18s ease infinite;
+}
+
+@keyframes gradientMove{
+  0%{ background-position:0% 50%; }
+  50%{ background-position:100% 50%; }
+  100%{ background-position:0% 50%; }
+}
+
+
+/* =====================================
+   🟣 OBSIDIAN THEME (PREMIUM PURPLE)
+   ===================================== */
+[data-theme="obsidian"] .animated-bg{
+  background: linear-gradient(-45deg,
+    #0f172a,
+    #3b0764,
+    #6d28d9,
+    #4c1d95,
+    #0f172a
+  );
+}
+
+
+/* =====================================
+   🌑 MIDNIGHT THEME (ROYAL DARK BLUE)
+   ===================================== */
+[data-theme="midnight"] .animated-bg{
+  background: linear-gradient(-45deg,
+    #020617,
+    #020617,
+    #0f172a,
+    #1e293b,
+    #020617
+  );
+}
+
+
+/* =====================================
+   🤍 PEARL THEME (MAC WHITE)
+   ===================================== */
+[data-theme="pearl"] .animated-bg{
+  background: linear-gradient(-45deg,
+    #ffffff,
+    #f8fafc,
+    #eef2ff,
+    #f1f5f9,
+    #ffffff
+  );
+}
+
+
+/* =====================================
+   ✨ SMOOTH PAGE FADE
+   ===================================== */
+.page-fade{
+  animation: fadeIn .7s ease;
+}
+
+@keyframes fadeIn{
+  from{ opacity:0; transform:translateY(8px);}
+  to{ opacity:1; transform:translateY(0);}
+}

@@ -1,0 +1,277 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================
+   GLOBAL LAYOUT FIX
+   ========================= */
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent accidental right-side strip */
+body {
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Vite template leftovers removal (safe) */
+#root {
+  min-height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ✅ Helps prevent 1px overflow caused by blur/transform */
+img,
+svg,
+canvas {
+  max-width: 100%;
+}
+
+/* =========================
+   THEME VARIABLES
+   ========================= */
+
+/* Default = OBSIDIAN */
+:root {
+  --bg-from: 30 27 75;
+  --bg-via: 88 28 135;
+  --bg-to: 2 6 23;
+
+  --text: 255 255 255;
+  --muted: 203 213 225;
+
+  --card: 255 255 255;
+  --card-alpha: 0.08;
+
+  --border: 255 255 255;
+  --border-alpha: 0.12;
+
+  --btn: 255 255 255;
+  --btn-alpha: 0.12;
+
+  --nav: 0 0 0;
+  --nav-alpha: 0.28;
+}
+
+/* OBSIDIAN */
+[data-theme="obsidian"] {
+  --bg-from: 30 27 75;
+  --bg-via: 88 28 135;
+  --bg-to: 2 6 23;
+
+  --text: 255 255 255;
+  --muted: 203 213 225;
+
+  --card: 255 255 255;
+  --card-alpha: 0.08;
+
+  --border: 255 255 255;
+  --border-alpha: 0.12;
+
+  --btn: 255 255 255;
+  --btn-alpha: 0.12;
+
+  --nav: 0 0 0;
+  --nav-alpha: 0.28;
+}
+
+/* MIDNIGHT */
+[data-theme="midnight"] {
+  --bg-from: 2 6 23;
+  --bg-via: 15 23 42;
+  --bg-to: 0 0 0;
+
+  --text: 255 255 255;
+  --muted: 148 163 184;
+
+  --card: 255 255 255;
+  --card-alpha: 0.07;
+
+  --border: 255 255 255;
+  --border-alpha: 0.14;
+
+  --btn: 255 255 255;
+  --btn-alpha: 0.10;
+
+  --nav: 0 0 0;
+  --nav-alpha: 0.35;
+}
+
+/* PEARL */
+[data-theme="pearl"] {
+  --bg-from: 248 250 252;
+  --bg-via: 241 245 249;
+  --bg-to: 226 232 240;
+
+  --text: 15 23 42;
+  --muted: 71 85 105;
+
+  --card: 255 255 255;
+  --card-alpha: 1;
+
+  --border: 15 23 42;
+  --border-alpha: 0.12;
+
+  --btn: 15 23 42;
+  --btn-alpha: 0.06;
+
+  --nav: 255 255 255;
+  --nav-alpha: 0.95;
+}
+
+/* =========================
+   macOS POLISH HELPERS
+   ========================= */
+
+.glass {
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.glass-white {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.soft-shadow {
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.18);
+}
+
+.soft-shadow-hover:hover {
+  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.24);
+}
+
+/* =========================
+   UNIVERSAL ANIMATED BG
+   ========================= */
+
+/* ✅ IMPORTANT:
+   Use this class on your OUTERMOST wrapper (App.jsx top div).
+*/
+.animated-theme-bg {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(
+    -45deg,
+    rgb(var(--bg-from)),
+    rgb(var(--bg-via)),
+    rgb(var(--bg-to)),
+    rgb(var(--bg-via))
+  );
+  background-size: 400% 400%;
+  animation: gradientMove 18s ease-in-out infinite;
+
+  /* smoother + avoids tiny banding lines */
+  will-change: background-position;
+}
+
+/* ✅ overlays must not cover UI */
+.animated-theme-bg::after,
+.animated-theme-bg::before {
+  z-index: 0;
+}
+
+/* vignette overlay */
+.animated-theme-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255,255,255,0.10), transparent 55%),
+    radial-gradient(circle at 50% 120%, rgba(0,0,0,0.22), transparent 55%);
+  mix-blend-mode: overlay;
+  opacity: 0.9;
+}
+
+/* subtle noise */
+.animated-theme-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+  opacity: 0.07;
+}
+
+/* ✅ Your actual app content should sit above bg layers */
+.app-content {
+  position: relative;
+  z-index: 10;
+}
+
+/* floating blobs */
+.bg-blob {
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 9999px;
+  filter: blur(55px);
+  opacity: 0.55;
+
+  /* smooth animation */
+  transform: translate3d(0,0,0);
+  will-change: transform;
+  animation: blobFloat 14s ease-in-out infinite;
+
+  /* blobs behind UI too */
+  z-index: 1;
+}
+
+.bg-blob.blob-2 { animation-duration: 18s; opacity: 0.45; }
+.bg-blob.blob-3 { animation-duration: 22s; opacity: 0.40; }
+
+@keyframes blobFloat {
+  0%   { transform: translate(-8%, -6%) scale(1); }
+  35%  { transform: translate(10%, 8%) scale(1.08); }
+  70%  { transform: translate(-4%, 14%) scale(0.98); }
+  100% { transform: translate(-8%, -6%) scale(1); }
+}
+
+/* page fade */
+.page-fade {
+  animation: pageFade 420ms ease both;
+}
+
+@keyframes pageFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ✅ SINGLE gradient animation definition */
+@keyframes gradientMove {
+  0%   { background-position: 0% 50%; }
+  25%  { background-position: 50% 100%; }
+  50%  { background-position: 100% 50%; }
+  75%  { background-position: 50% 0%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ✅ Respect user motion setting */
+@media (prefers-reduced-motion: reduce) {
+  .animated-theme-bg,
+  .bg-blob,
+  .page-fade {
+    animation: none !important;
+  }
+}
