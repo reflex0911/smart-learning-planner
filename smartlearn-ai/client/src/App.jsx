@@ -1,21 +1,33 @@
 import { useEffect, useMemo, useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import Sidebar from "./components/Sidebar";
+import Footer from "./components/footer";
 
 import Home from "./pages/Home";
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
+  const location = useLocation();
+
   const [theme, setTheme] = useState(
     () => localStorage.getItem("theme") || "obsidian"
   );
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  
+
+  // ✅ close sidebar on route change
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
 
   // theme apply
   useEffect(() => {
@@ -32,6 +44,7 @@ function App() {
     return () => unsub();
   }, []);
 
+  
   // 🌌 FIXED background gradient
   const bgStyle = useMemo(() => {
     if (theme === "pearl") {
@@ -85,12 +98,12 @@ function App() {
       className="relative min-h-screen w-full overflow-x-hidden"
       style={{ color: `rgb(var(--text))` }}
     >
-      {/* ✅ FIXED WALLPAPER (never scrolls, never takes layout space) */}
+      {/* ✅ FIXED WALLPAPER */}
       <div className="fixed inset-0 z-0 overflow-hidden" style={bgStyle}>
         <div className="absolute inset-0" style={overlayStyle} />
       </div>
 
-      {/* ✅ FIXED BLOBS (never scroll) */}
+      {/* ✅ FIXED BLOBS */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div
           className="bg-blob"
@@ -135,24 +148,45 @@ function App() {
         />
       </div>
 
-      {/* ✅ UI LAYER (above background) */}
+      {/* ✅ UI LAYER */}
       <div className="relative z-10 min-h-screen flex flex-col">
-        <Navbar theme={theme} setTheme={setTheme} />
+        {/* ✅ Navbar (menu button will call this) */}
+        <Navbar
+          theme={theme}
+          setTheme={setTheme}
+          onOpenSidebar={() => setSidebarOpen(true)}
+        />
 
-        {/* ✅ Main grows, footer bottom */}
-        <main className="flex-grow pt-16 page-fade">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route
-              path="/login"
-              element={!user ? <Login /> : <Navigate to="/dashboard" replace />}
-            />
-            <Route
-              path="/dashboard"
-              element={user ? <Dashboard /> : <Navigate to="/login" replace />}
-            />
-          </Routes>
-        </main>
+        {/* ✅ Sidebar */}
+        <Sidebar
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          theme={theme}
+          setTheme={setTheme}
+        />
+
+        {/* ✅ Main (desktop pe sidebar space) */}
+<main className="flex-grow pt-16 page-fade">
+
+  <div className="max-w-6xl mx-auto px-4">
+
+    <Routes>
+      <Route path="/" element={<Home />} />
+
+      <Route
+        path="/login"
+        element={!user ? <Login /> : <Navigate to="/dashboard" replace />}
+      />
+
+      <Route
+        path="/dashboard"
+        element={user ? <Dashboard /> : <Navigate to="/login" replace />}
+      />
+    </Routes>
+
+  </div>
+
+</main>
 
         <Footer />
       </div>
